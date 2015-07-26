@@ -38,14 +38,14 @@ var con = new pg.Client({
   database: args.database
 });
 con.connect();
-if(args.down) {
-  console.log("Dropping table 'person'")
-  var query = con.query("drop table if exists person");
-  query.on('end', function() {
-    console.log("Dropped!");
-    con.end();
-  });
-} else {
+
+console.log("Dropping table 'person'")
+var query = con.query("drop table if exists person");
+query.on('end', function() {
+  if (args.down) {
+    return con.end();
+  }
+
   console.log("Creating table 'person'");
   con.query("create table person(id serial, name varchar(10), age integer)").on('end', function(){
     console.log("Created!");
@@ -57,4 +57,4 @@ if(args.down) {
     console.log("Inserted 26 people");
     con.end();
   });
-}
+});
